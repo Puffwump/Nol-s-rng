@@ -16,17 +16,11 @@ while True:
         print("congratulations! for reaching 100 rolls, you have been awarded with the 25 rolls option!")
     a = input("type the amount of times you would like to roll? (1, 5 or 10 times) ")
 
-    if a == "1":
-        n = 1
-    elif a == "5":
-        n = 5
-    elif a == "10":
-        n = 10
-    if totalRolls >= 100 and a == "25":
-        n = 25
-    if int(a) > 10 and totalRolls < 100:
-        print("invalid syntax, setting to 1 roll...")
-        n = 1
+    if a == "1": n = 1
+    elif a == "5": n = 5
+    elif a == "10": n = 10
+    if totalRolls >= 100 and a == "25": n = 25
+    if int(a) > 10 and totalRolls < 100: print("invalid syntax, setting to 1 roll..."); n = 1
     totalRolls += n
     common = 0
     uncommon = 0
