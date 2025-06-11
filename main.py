@@ -6,6 +6,7 @@ totalRolls = 0
 rolled_coins = 0
 coins = 0
 reroll = 0
+common_coins = 0
 print("welcome to rng")
 while True:
     if totalRolls >= 100:
@@ -40,6 +41,7 @@ while True:
         if roll < 100:
             rarity = "common"
             coins += 1
+            common_coins += 1
             common += 1
         if roll >= 100 and roll <= 130:
             rarity = "uncommon"
@@ -81,7 +83,7 @@ while True:
     print("you rolled mythic", mythic, "times")
     time.sleep(0.5)
     print("you earned", rolled_coins, "coins")
-    coins += rolled_coins
+    common_coins += rolled_coins
     rolled_coins = 0
     print("you have rolled a total of", totalRolls, "times")
     time.sleep(0.5)
