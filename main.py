@@ -1,184 +1,130 @@
-
 import random
 import time
-global totalRolls
-speed = 0.5
+
+speed = 1
 totalRolls = 0
 rolled_coins = 0
 coins = 0
 reroll = 0
 common_coins = 0
-exotic_unlocked = False
-exotic_printed = False
-print("welcome to rng")
+
+print("\nWelcome to the rolling simulator!")
+
 while True:
     if totalRolls >= 100:
         print("congratulations! for reaching 100 rolls, you have been awarded with the 25 rolls option!")
-    a = input("type the amount of times you would like to roll? (1, 5 or 10 times) ")
+    a = input("\ntype the amount of times you would like to roll? (1, 5 or 10 times):")
+    print("\n")
 
-    if a == "1":
+    if a == "1": n = 1
+    elif a == "5": n = 5
+    elif a == "10": n = 10
+    elif totalRolls >= 100 and a == "25": n = 25
+    else:
+        try:
+            if int(a) > 10 and totalRolls < 100:
+                print("invalid syntax, setting to 1 roll... \n")
+        except ValueError:
+            print("invalid input, setting to 1 roll... \n")
         n = 1
-    elif a == "5":
-        n = 5
-    elif a == "10":
-        n = 10
-    if totalRolls >= 100 and a == "25":
-        n = 25
-    if int(a) > 10 and totalRolls < 100:
-        print("invalid syntax, setting to 1 roll...")
-        n = 1
+
     totalRolls += n
-    common = 0
-    uncommon = 0
-    rare = 0
-    epic = 0
-    legendary = 0
-    mythic = 0
-    if exotic_unlocked == True:
-        exotic = 0
-    for i in range (int(n)):
-        print("rolling...")
+    common = uncommon = rare = epic = legendary = mythic = 0
+    for i in range(n):
+        print("rolling...", end="\r")
         time.sleep(speed)
-        if exotic_unlocked == True:
-            if exotic_printed == False:
-                print("ExOtIc rarity is a 1/300 chance, and gives you 500 coins!")
-                exotic_printed = True
-            roll = (random.randint(1, 300))
-            if roll < 150:
-                rarity = "common"
-                rolled_coins += 1
-                common += 1
-            if roll >= 150 and roll <= 241:
-                rarity = "uncommon"
-                uncommon += 1
-                rolled_coins += 3
-            if roll >= 241 and roll <= 271:
-                rarity = "rare"
-                rare += 110
-                rolled_coins += 10
-            if roll >= 271 and roll <= 291:
-                rarity = "epic"
-                epic += 1
-                rolled_coins += 20
-            if roll >= 291 and roll <= 296:
-                rarity = "legendary"
-                legendary += 1
-                rolled_coins += 50
-            if roll >= 296 and roll != 300:
-                rarity = "mythic"
-                mythic += 1
-                rolled_coins += 100
-            if roll == 300:
-                rarity = "exotic"
-                rolled_coins += 500
-                print("FANTASTIC!!!! you rolled ExOtIc rarity!!!!!!!")
-            print("you rolled ", rarity , "!")
-            if rarity == "epic":
-                print("wow! you got epic!")
-            if rarity == "legendary":
-                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!")
-            if rarity == "mythic":
-                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!")
+        roll = random.randint(1, 150)
+        if roll < reroll:
+            roll = random.randint(1, 150)
+            print("rerolled!")
+        if roll < 100:
+            rarity = "common"
+            rolled_coins += 1
+            common += 1
+        elif roll <= 130:
+            rarity = "uncommon"
+            uncommon += 1
+            rolled_coins += 3
+        elif roll <= 141:
+            rarity = "rare"
+            rare += 1
+            rolled_coins += 10
+        elif roll <= 147:
+            rarity = "epic"
+            epic += 1
+            rolled_coins += 20
+        elif roll != 150:
+            rarity = "legendary"
+            legendary += 1
+            rolled_coins += 50
         else:
-            roll = (random.randint(1, 150))
-            if roll < reroll:
-                roll = (random.randint(1, 150))
-                print("rerolled!")
-            if roll < 100:
-                rarity = "common"
-                rolled_coins += 1
-                common += 1
-            if roll >= 100 and roll <= 130:
-                rarity = "uncommon"
-                uncommon += 1
-                rolled_coins += 3
-            if roll >= 131 and roll <= 141:
-                rarity = "rare"
-                rare += 1
-                rolled_coins += 10
-            if roll >= 142 and roll <= 147:
-                rarity = "epic"
-                epic += 1
-                rolled_coins += 20
-            if roll >= 148 and roll != 150:
-                rarity = "legendary"
-                legendary += 1
-                rolled_coins += 50
-            if roll == 150:
-                rarity = "mythic"
-                mythic += 1
-                rolled_coins += 100
-            print("you rolled ", rarity , "!")
-            if rarity == "epic":
-                print("wow! you got epic!")
-            if rarity == "legendary":
-                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!")
-            if rarity == "mythic":
-                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!")
-    print("you rolled common ", common, " times")
+            rarity = "mythic"
+            mythic += 1
+            rolled_coins += 100
+        print("you rolled", rarity, "!")
+        if rarity == "epic":
+            print("wow! you got epic!")
+        if rarity == "legendary":
+            print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!")
+        if rarity == "mythic":
+            print("AMAZING!!!!!!!! YOU GOT MYTHIC, WHICH IS THE RAREST ONE, 1/150!!!!!")
+    print("you rolled common", common, "times")
     time.sleep(0.5)
-    print("you rolled uncommon ", uncommon, " times")
+    print("you rolled uncommon", uncommon, "times")
     time.sleep(0.5)
-    print("you rolled rare ", rare, " times")
+    print("you rolled rare", rare, "times")
     time.sleep(0.5)
-    print("you rolled epic ", epic, " times")
+    print("you rolled epic", epic, "times")
     time.sleep(0.5)
-    print("you rolled legendary ", legendary, " times")
+    print("you rolled legendary", legendary, "times")
     time.sleep(0.5)
     print("you rolled mythic", mythic, "times")
     time.sleep(0.5)
-    if exotic_unlocked == True:
-        print("you rolled exotic", exotic, "times")
     rolled_coins = rolled_coins + common_coins
-    print("you earned", rolled_coins, "coins")
+    print("\nyou earned", rolled_coins, "coins")
+
     coins += rolled_coins
     rolled_coins = 0
+
     print("you have rolled a total of", totalRolls, "times")
     time.sleep(0.5)
+
     print("you have accumulated a total of", coins, "coins")
-    s = input("would you like to spend your coins in the shop? ")
+
+    s = input("\nwould you like to spend your coins in the shop? ")
     if s == "yes":
-        u = input("would you like to upgrade your rolling speed, luck, or unlock new rarities? (type speed, luck or rarities)")
+        u = input("\nWould you like to upgrade your rolling speed, luck, or unlock new rarities? (type speed, luck or rarities): ")
         if u == "speed":
-            confirm = input("upgrading rolling speed from 0.5 seconds -> 0.45 seconds for 40 coins?")
+            confirm = input("\nUpgrading rolling speed from 0.5 seconds -> 0.45 seconds for 40 coins? (yes/no): ")
             if confirm == "yes":
                 if coins >= 40:
                     coins -= 40
                     speed = 0.45
+                    print("\nSpeed upgraded! Rolling will now be faster.\n")
                 else:
-                    print("ERROR. not enough coins for upgrade. sending you to rolling...")
+                    print("\nERROR. Not enough coins for upgrade. Sending you to rolling...\n")
             else:
-                print("sending you to rolling...")
-        if u == "luck":
-            confirm = input("upgrading reroll chance by 0 -> less than 110 for 100 coins")
+                print("\nSending you to rolling...\n")
+        elif u == "luck":
+            confirm = input("\nUpgrading reroll chance by 0 -> less than 110 for 100 coins? (yes/no): ")
             if confirm == "yes":
                 if coins >= 100:
                     coins -= 100
                     reroll = 110
+                    print("\nLuck upgraded! You now have a better reroll chance.\n")
                 else:
-                    print("ERROR, not enough coins for upgrade, sending you to rolling...")
+                    print("\nERROR, not enough coins for upgrade. Sending you to rolling...\n")
             else:
                 print("sending you to rolling")
-            if u == "rarity":
-                confirm = input("would you like to unlock a NEW RARITY?!?! ")
-                if confirm == "yes":
-                    confirm2 = input("unlocking ExOtIc for 200 coins ")
-                    if confirm2 == "yes":
-                        if coins >= 200:
-                            coins -= 200
-                            print("you have unlocked ExOtIc rarity!")
-                            print("ExOtIc rarity is a 1/300 chance, and gives you 500 coins!")
-                            exotic_unlocked = True
-                        else:
-                            print("ERROR, not enough coins for upgrade, sending you to rolling...")
-                    else:
-                        print("sending you to rolling...")
-                print("this feature has not come out yet, but it's in the works!")
-                print("sending you to rolling...")
+        elif u == "rarities":
+            print("this feature has not come out yet, but it's in the works!")
+            print("sending you to rolling...")
+        else:
+            print("Invalid shop option. Sending you to rolling...")
     else:
         print("sending you to rolling...")
     r = input("would you like to roll again? (yes or no) ")
     if r == "yes":
-        time.sleep(0)
+        continue
     if r == "no":
         break
