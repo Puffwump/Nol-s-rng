@@ -1,3 +1,4 @@
+
 import random
 import time
 global totalRolls
@@ -40,8 +41,7 @@ while True:
             print("rerolled!")
         if roll < 100:
             rarity = "common"
-            coins += 1
-            common_coins += 1
+            rolled_coins += 1
             common += 1
         if roll >= 100 and roll <= 130:
             rarity = "uncommon"
@@ -82,8 +82,9 @@ while True:
     time.sleep(0.5)
     print("you rolled mythic", mythic, "times")
     time.sleep(0.5)
+    rolled_coins = rolled_coins + common_coins
     print("you earned", rolled_coins, "coins")
-    common_coins += rolled_coins
+    coins += rolled_coins
     rolled_coins = 0
     print("you have rolled a total of", totalRolls, "times")
     time.sleep(0.5)
