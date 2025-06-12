@@ -1,4 +1,4 @@
 # Nol-s-rng
 this is a small rng game i made, new features hopefully coming soon!
-please dont expect much for now... but still enjoy it as much as possible before i FIX coins!
-but yeah. just play the game. DO IT NOW. 
+NEW UPDATE!!! Fixed the coins bug, made proper math, added more upgrades, human readability AND a new rarity!!!!!
+go find it! play the game! DO IIIIT! DO IT DO IT DO IT DOOOO IIIIT!!!!! 
