@@ -54,7 +54,7 @@ while True:
                 rolled_coins += 3
             if roll >= 241 and roll <= 271:
                 rarity = "rare"
-                rare += 110
+                rare += 1
                 rolled_coins += 10
             if roll >= 271 and roll <= 291:
                 rarity = "epic"
