@@ -12,67 +12,100 @@ class Colors:
     BOLD = "\033[1m"
 
 game = {
-    "speed": 1,
+    "speed": 0.5,
     "coins": 0,
-    "rarities":{
-        "common": 0,
-        "uncommon": 0,
-        "rare": 0,
-        "epic": 0,
-        "legendary": 0,
-        "mythic": 0,
-        "exotic": 0,
+    "rarities": {
+        "common": {"count": 0, "reward": 1},
+        "uncommon": {"count": 0, "reward": 3},
+        "rare": {"count": 0, "reward": 10},
+        "epic": {"count": 0, "reward": 20},
+        "legendary": {"count": 0, "reward": 50},
+        "mythic": {"count": 0, "reward": 100},
+        "exotic": {"count": 0, "reward": 500},
     },
+    "rolled_coins": 0,
     "exotic_unlocked": False,
-    "max_rolls": 10,
+    "max_rolls": 10
 }
 
-def roll_rarity():
-    roll = rd.randint(1, 500)
+def prompt_roll():
+    try:
+        rolls = int(input(f"How many rolls (max {game['max_rolls']})? "))
+        if not (1 <= rolls <= game["max_rolls"]):
+            print(f"{Colors.RED}\nPlease enter a number between 1 and {game['max_rolls']}.{Colors.RESET}")
+            return prompt_roll()
+    except ValueError:
+        print(Colors.RED, "\nInvalid input. Please enter a valid number.\n", Colors.RESET)
+        return prompt_roll()
 
-    if roll <= 300: rarity = "common"
-    elif roll <= 400: rarity = "uncommon"
-    elif roll <= 470: rarity = "rare"
-    elif roll <= 490: rarity = "epic"
-    elif roll <= 497: rarity = "legendary"
-    elif roll <= 499: rarity = "mythic"
-    elif roll == 500 and game["exotic_unlocked"]: rarity = "exotic"
-    elif roll == 500 and not game["exotic_unlocked"]: game["exotic_unlocked"] = True
-
-
-    return rarity
-
-def roll(count):
-    for i in range( 0, count ):
-        rarity = roll_rarity()
-        print(f"You rolled {rarity} rarity!", end = "\r")
-        tm.sleep(0.5)
+    for _ in range(rolls):
 
         time_now = tm.time()
-
-        spinner = ['|', '/', '-', '\\']
+        spinner = ['|', '/', '-', '\\'] 
         while tm.time() - time_now < game["speed"]:
             for char in spinner:
-                print(" "*8,char, " "*100 , end = "\r")
+                print(" "*8, char, " "*100, end="\r")
                 tm.sleep(0.05)
 
-    if rarity == "common": game["coins"] += 1; game["rarities"]["common"] += 1
-    elif rarity == "uncommon": game["coins"] += 3; game["rarities"]["uncommon"] += 1
-    elif rarity == "rare": game["coins"] += 10; game["rarities"]["rare"] += 1
-    elif rarity == "epic": game["coins"] += 20; game["rarities"]["epic"] += 1
-    elif rarity == "legendary": game["coins"] += 50; game["rarities"]["legendary"] += 1
-    elif rarity == "mythic": game["coins"] += 100; game["rarities"]["mythic"] += 1
-    elif rarity == "exotic": game["coins"] += 500; game["rarities"]["exotic"] += 1
+        roll = rd.randint(1, 500)
+        rarity = (
+            "common" if roll <= 300 else
+            "uncommon" if roll <= 400 else
+            "rare" if roll <= 470 else
+            "epic" if roll <= 490 else
+            "legendary" if roll <= 497 else
+            "mythic" if roll <= 499 else
+            "exotic"
+        )
 
-def prompt_rolls():
+        if roll == 500 and not game["exotic_unlocked"]:
+            game["exotic_unlocked"] = True
+
+        print(f"You rolled {rarity} rarity!", end="\r")
+        tm.sleep(0.5)
+
+        game["rolled_coins"] += game["rarities"][rarity]["reward"]
+        game["rarities"][rarity]["count"] += 1
+
+    print(f"{Colors.GREEN}You earned {game['rolled_coins']} coins!{Colors.RESET}", " "*100, end = '\n')
+    game["coins"] += game["rolled_coins"]
+    game["rolled_coins"] = 0
+    print(f"{Colors.YELLOW}Total Coins: {game['coins']}{Colors.RESET}")
+
+def main():
     while True:
         try:
-            rolls = int(input(f"How many rolls (max {game['max_rolls']})? "))
-            if 1 <= rolls <= game["max_rolls"]:
-                roll(rolls)
+            i = input(f"{Colors.MAGENTA}>>> {Colors.RESET}").strip().lower()
+
+            if i in ["exit", "quit"]:
+                print(Colors.GREEN, "Thank you for playing! Goodbye!", Colors.RESET)
+                return
+            elif i in ["roll", "r"]:
+                prompt_roll()
+            elif i in ["help", "h"]:
+                print(f"{Colors.CYAN}Available commands:\n"
+                      f"  roll (or r) - Roll the dice\n"
+                      f"  exit (or quit) - Exit the game\n"
+                      f"  help (or h) - Show this help message{Colors.RESET}")
+            elif i in ["status", "s"]:
+                print(f"{Colors.BLUE}Current Status:\n"
+                      f"  Coins: {game['coins']}\n"
+                      f"  Rolled Coins: {game['rolled_coins']}\n"
+                      f"  Exotic Unlocked: {'Yes' if game['exotic_unlocked'] else 'No'}\n"
+                      f"  Rarities:")
+                print(f"    Common: {game['rarities']['common']['count']} (Reward: {game['rarities']['common']['reward']})")
+                print(f"    Uncommon: {game['rarities']['uncommon']['count']} (Reward: {game['rarities']['uncommon']['reward']})")
+                print(f"    Rare: {game['rarities']['rare']['count']} (Reward: {game['rarities']['rare']['reward']})")
+                print(f"    Epic: {game['rarities']['epic']['count']} (Reward: {game['rarities']['epic']['reward']})")
+                print(f"    Legendary: {game['rarities']['legendary']['count']} (Reward: {game['rarities']['legendary']['reward']})")
+                print(f"    Mythic: {game['rarities']['mythic']['count']} (Reward: {game['rarities']['mythic']['reward']})")
+                if game['exotic_unlocked']:
+                    print(f"    Exotic: {game['rarities']['exotic']['count']} (Reward: {game['rarities']['exotic']['reward']})")
+                print(Colors.RESET)
             else:
-                print(f"Please enter a number between 1 and {game['max_rolls']}.")
-                continue
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
-            continue
+                print(f"{Colors.RED}Invalid command. Type 'help' to list all commands.{Colors.RESET}")
+        except KeyboardInterrupt:
+            print(Colors.RED, "\nKeyboardInterrupt, I would suggest using 'quit'", Colors.RESET)
+ 
+if __name__ == "__main__":
+    main()
