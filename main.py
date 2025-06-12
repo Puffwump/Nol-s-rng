@@ -37,7 +37,7 @@ while True:
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
-        print("rolling...", end="\r")
+        print("rolling...", " "*100, end="\r")
         time.sleep(speed)
         if exotic_unlocked == True:
             if exotic_printed == False:
@@ -71,14 +71,14 @@ while True:
             if roll == 300:
                 rarity = "exotic"
                 rolled_coins += 500
-                print("FANTASTIC!!!! you rolled ExOtIc rarity!!!!!!!")
+                print("FANTASTIC!!!! you rolled ExOtIc rarity!!!!!!!", end="\r")
             print("you rolled ", rarity , "!")
             if rarity == "epic":
-                print("wow! you got epic!")
+                print("wow! you got epic!", end="\r")
             if rarity == "legendary":
-                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!")
+                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!", end="\r")
             if rarity == "mythic":
-                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!")
+                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!", end="\r")
         else:
             roll = (random.randint(1, 150))
             if roll < reroll:
@@ -108,13 +108,15 @@ while True:
                 rarity = "mythic"
                 mythic += 1
                 rolled_coins += 100
-            print("you rolled ", rarity , "!")
+            print("you rolled ", rarity , "!", end="\r")
             if rarity == "epic":
-                print("wow! you got epic!")
+                print("wow! you got epic!", end="\r")
             if rarity == "legendary":
-                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!")
+                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!", end="\r")
             if rarity == "mythic":
-                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!")
+                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!", end="\r")
+
+            time.sleep(speed)
     print("you rolled common ", common, " times")
     time.sleep(0.5)
     print("you rolled uncommon ", uncommon, " times")
