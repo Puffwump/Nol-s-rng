@@ -11,6 +11,7 @@ common_coins = 0
 exotic_unlocked = False
 exotic_printed = False
 print("welcome to rng")
+
 while True:
     if totalRolls >= 100:
         print("congratulations! for reaching 100 rolls, you have been awarded with the 25 rolls option!")
