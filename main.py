@@ -37,7 +37,7 @@ while True:
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
-        print("rolling...", " "*100, end="\r")
+        print("rolling...")
         time.sleep(speed)
         if exotic_unlocked == True:
             if exotic_printed == False:
