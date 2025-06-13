@@ -68,7 +68,7 @@ def prompt_roll():
         if roll == 500 and not game["exotic_unlocked"]:
             game["exotic_unlocked"] = True
 
-        print(f"You rolled {rarity} rarity!", end="\r")
+        print(f"You rolled {rarity} rarity!", " "*100, end="\r")
         tm.sleep(0.5)
 
         game["rolled_coins"] += game["rarities"][rarity]["reward"]* game["coin_multiplier"]
