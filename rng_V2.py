@@ -10,6 +10,7 @@ class Colors:
     CYAN = "\033[96m"
     RESET = "\033[0m"
     BOLD = "\033[1m"
+    CLEAR_LINE = "\033[2K"
 
 print(f"{Colors.MAGENTA}\nWelcome to the RNG Game!{Colors.RESET}")
 print(f"{Colors.CYAN}Roll the dice and earn coins based on the rarity of your rolls!{Colors.RESET}\n")
@@ -46,11 +47,12 @@ def prompt_roll():
     for _ in range(rolls):
 
         time_now = tm.time()
-        spinner = ['|', '/', '-', '\\'] 
-        while tm.time() - time_now < game["speed"]:
-            for char in spinner:
-                print(" "*8, char, " "*100, end="\r")
-                tm.sleep(0.05)
+        spinner = ['|', '/', '-', '\\']
+        if game["speed"] != 0: 
+            while tm.time() - time_now < game["speed"]:
+                for char in spinner:
+                    print(" "*8, char, " "*100, end="\r")
+                    tm.sleep(0.05)
 
         roll = rd.randint(1, 500)
         rarity = (
@@ -83,37 +85,47 @@ def shop():
     print(f"{Colors.YELLOW}Current Coins: {game['coins']}{Colors.RESET}\n") 
 
     while True:
-        i = input(f"{Colors.YELLOW} shop >>> {Colors.RESET}").strip().lower()
+        i = input(f"{Colors.YELLOW} shop, what would you like to buy? >>> {Colors.RESET}").strip().lower()
         if i in ["exit"]:
-            return print(f"{Colors.GREEN}Exiting shop...{Colors.RESET}")
-        elif "buy" in i:
-            item = i.split("buy")[-1].strip()
-
-            if item in ["speed multiplier", "speed", "speed boost", "speed upgrade"]:
-                cost = 40
-                if game["coins"] >= cost:
-                    game["coins"] -= cost
-                    game["speed"] -= 0.1
-                    print(f"{Colors.GREEN}You bought a Speed Multiplier! Speed is now {game['speed']}s{Colors.RESET}")
+            print(f"\n{Colors.GREEN}Exiting shop...{Colors.RESET}\n")
+            return
+        elif i in ["list", 'help', '']:
+            print(f"\n{Colors.CYAN}Available products:\n"
+              f"  1. Faster Rolls (speed) - 50 coins: Decrease roll animation time\n"
+              f"  2. Coin Multiplier (mult) - 100 coins: Double coins per roll\n"
+              f"  3. Increase Max Rolls (max) - 200 coins: Increase max rolls per session by 5\n"
+              f"  Type the product name to buy it!{Colors.RESET}\n")
+        elif i in ["speed", "faster", "rollspeed"]:
+            if game["coins"] >= 50:
+                if game["speed"] > 0.1:
+                    game["coins"] -= 50
+                    game["speed"] = max(0.1, game["speed"] - 0.1)
+                    print(f"\n{Colors.GREEN}Roll speed increased! New speed: {game['speed']}s{Colors.RESET}\n")
                 else:
-                    print(f"{Colors.RED}Not enough coins!{Colors.RESET}")
-            elif item in ["coin multiplier", "coin", "coin boost", "coin upgrade"]:
-                cost = 100
-                if game["coins"] >= cost:
-                    game["coins"] -= cost
-                    game["coin_multiplier"] *= 2
-                    print(f"{Colors.GREEN}You bought a Coin Multiplier!{Colors.RESET}")
-                else:
-                    print(f"{Colors.RED}Not enough coins!{Colors.RESET}")
-            elif item in ['list', 'help']:
-                print(f"{Colors.CYAN}Available items to buy:\n"
-                      f"  - Speed Multiplier (40 coins)\n"
-                      f"  - Coin Multiplier (100 coins)\n"
-                      f"Type 'buy <item>' to purchase an item.{Colors.RESET}")
+                    print(f"\n{Colors.YELLOW}Roll speed is already at minimum!{Colors.RESET}\n")
             else:
-                print(f"{Colors.RED}Invalid item.{Colors.RESET}")
+                print(f"\n{Colors.RED}Not enough coins!{Colors.RESET}\n")
+        elif i in ["mult", "multiplier", 'coin', 'coins']:
+            if game["coins"] >= 100:
+                if game["coin_multiplier"] == 1:
+                    game["coins"] -= 100
+                    game["coin_multiplier"] = 2
+                    print(f"\n{Colors.GREEN}Coin multiplier activated! You now earn double coins per roll.{Colors.RESET}\n")
+                else:
+                    print(f"\n{Colors.YELLOW}Coin multiplier already purchased!{Colors.RESET}\n")
+            else:
+                print(f"\n{Colors.RED}Not enough coins!{Colors.RESET}\n")
+        elif i in ["max", "maxrolls"]:
+            if game["coins"] >= 200:
+                
+                game["coins"] -= 200
+                game["max_rolls"] += 5
+                print(f"\n{Colors.GREEN}Max rolls per session increased! New max: {game['max_rolls']}{Colors.RESET}\n")
+            else:
+                print(f"\n{Colors.RED}Not enough coins!{Colors.RESET}\n")
         else:
-            print(f"{Colors.RED}Invalid command. Type 'list' to see available items.{Colors.RESET}")
+            print(f"{Colors.RED}Unknown product. Type 'list' to see available products.{Colors.RESET}")
+            
 
 def main():
     while True:
@@ -135,6 +147,7 @@ def main():
                       f"  Coins: {game['coins']}\n"
                       f"  Rolled Coins: {game['rolled_coins']}\n"
                       f"  Exotic Unlocked: {'Yes' if game['exotic_unlocked'] else 'No'}\n"
+                      f"  Speed: {game['speed']}s\n"
                       f"  Rarities:")
                 print(f"    Common: {game['rarities']['common']['count']} (Reward: {game['rarities']['common']['reward']})")
                 print(f"    Uncommon: {game['rarities']['uncommon']['count']} (Reward: {game['rarities']['uncommon']['reward']})")
