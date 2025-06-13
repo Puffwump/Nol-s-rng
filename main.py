@@ -37,7 +37,7 @@ while True:
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
-        print("rolling...")
+        print("rolling..." "",*100, end="\r")
         time.sleep(speed)
         if exotic_unlocked == True:
             if exotic_printed == False:
@@ -108,7 +108,7 @@ while True:
                 rarity = "mythic"
                 mythic += 1
                 rolled_coins += 100
-            print("you rolled ", rarity , "!", end="\r")
+            print("you rolled ", rarity , "!",)
             if rarity == "epic":
                 print("wow! you got epic!", end="\r")
             if rarity == "legendary":
