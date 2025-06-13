@@ -11,6 +11,7 @@ class Colors:
     RESET = "\033[0m"
     BOLD = "\033[1m"
     CLEAR_LINE = "\033[2K"
+    PURPLE = "\033[95m"
 
 print(f"{Colors.MAGENTA}\nWelcome to the RNG Game!{Colors.RESET}")
 print(f"{Colors.CYAN}Roll the dice and earn coins based on the rarity of your rolls!{Colors.RESET}\n")
@@ -123,9 +124,15 @@ def shop():
                 print(f"\n{Colors.GREEN}Max rolls per session increased! New max: {game['max_rolls']}{Colors.RESET}\n")
             else:
                 print(f"\n{Colors.RED}Not enough coins!{Colors.RESET}\n")
+        elif i in ["exotic", "rarity"]:
+            if game["coins"] >= 300:
+                game["coins"] -= 300
+                game["exotic_unlocked"] = True
+                print(f"\n{Colors.PURPLE}Exotic rarity unlocked!{Colors.RESET}\n")
+            else:
+                print(f"\n{Colors.RED}Not enough coins!{Colors.RESET}\n")
         else:
-            print(f"{Colors.RED}Unknown product. Type 'list' to see available products.{Colors.RESET}")
-            
+            print(f"{Colors.RED}Unknown product. Type 'list' to see available products.{Colors.RESET}")            
 
 def main():
     while True:
@@ -141,6 +148,8 @@ def main():
                 print(f"{Colors.CYAN}Available commands:\n"
                       f"  roll (or r) - Roll the dice\n"
                       f"  exit (or quit) - Exit the game\n"
+                      f"  status (or s) - Show current status\n"
+                      f"  shop (or sh) - Open the shop\n"
                       f"  help (or h) - Show this help message{Colors.RESET}")
             elif i in ["status", "s"]:
                 print(f"{Colors.BLUE}Current Status:\n"
