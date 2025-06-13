@@ -11,6 +11,10 @@ class Colors:
     RESET = "\033[0m"
     BOLD = "\033[1m"
 
+print(f"{Colors.MAGENTA}\nWelcome to the RNG Game!{Colors.RESET}")
+print(f"{Colors.CYAN}Roll the dice and earn coins based on the rarity of your rolls!{Colors.RESET}\n")
+print(f"{Colors.YELLOW}Type 'help' for available commands.{Colors.RESET}\n")
+
 game = {
     "speed": 0.5,
     "coins": 0,
@@ -23,6 +27,7 @@ game = {
         "mythic": {"count": 0, "reward": 100},
         "exotic": {"count": 0, "reward": 500},
     },
+    "coin_multiplier": 1,
     "rolled_coins": 0,
     "exotic_unlocked": False,
     "max_rolls": 10
@@ -64,13 +69,51 @@ def prompt_roll():
         print(f"You rolled {rarity} rarity!", end="\r")
         tm.sleep(0.5)
 
-        game["rolled_coins"] += game["rarities"][rarity]["reward"]
+        game["rolled_coins"] += game["rarities"][rarity]["reward"]* game["coin_multiplier"]
         game["rarities"][rarity]["count"] += 1
 
     print(f"{Colors.GREEN}You earned {game['rolled_coins']} coins!{Colors.RESET}", " "*100, end = '\n')
     game["coins"] += game["rolled_coins"]
     game["rolled_coins"] = 0
     print(f"{Colors.YELLOW}Total Coins: {game['coins']}{Colors.RESET}")
+
+def shop():
+    print(f"{Colors.BLUE}Welcome to the shop!{Colors.RESET}")
+    print(f"{Colors.CYAN}You can spend your coins here to unlock new features or buy items.{Colors.RESET}\n")
+    print(f"{Colors.YELLOW}Current Coins: {game['coins']}{Colors.RESET}\n") 
+
+    while True:
+        i = input(f"{Colors.YELLOW} shop >>> {Colors.RESET}").strip().lower()
+        if i in ["exit"]:
+            return print(f"{Colors.GREEN}Exiting shop...{Colors.RESET}")
+        elif "buy" in i:
+            item = i.split("buy")[-1].strip()
+
+            if item in ["speed multiplier", "speed", "speed boost", "speed upgrade"]:
+                cost = 40
+                if game["coins"] >= cost:
+                    game["coins"] -= cost
+                    game["speed"] -= 0.1
+                    print(f"{Colors.GREEN}You bought a Speed Multiplier! Speed is now {game['speed']}s{Colors.RESET}")
+                else:
+                    print(f"{Colors.RED}Not enough coins!{Colors.RESET}")
+            elif item in ["coin multiplier", "coin", "coin boost", "coin upgrade"]:
+                cost = 100
+                if game["coins"] >= cost:
+                    game["coins"] -= cost
+                    game["coin_multiplier"] *= 2
+                    print(f"{Colors.GREEN}You bought a Coin Multiplier!{Colors.RESET}")
+                else:
+                    print(f"{Colors.RED}Not enough coins!{Colors.RESET}")
+            elif item in ['list', 'help']:
+                print(f"{Colors.CYAN}Available items to buy:\n"
+                      f"  - Speed Multiplier (40 coins)\n"
+                      f"  - Coin Multiplier (100 coins)\n"
+                      f"Type 'buy <item>' to purchase an item.{Colors.RESET}")
+            else:
+                print(f"{Colors.RED}Invalid item.{Colors.RESET}")
+        else:
+            print(f"{Colors.RED}Invalid command. Type 'list' to see available items.{Colors.RESET}")
 
 def main():
     while True:
@@ -102,6 +145,8 @@ def main():
                 if game['exotic_unlocked']:
                     print(f"    Exotic: {game['rarities']['exotic']['count']} (Reward: {game['rarities']['exotic']['reward']})")
                 print(Colors.RESET)
+            elif i in ["shop", "sh"]:
+                shop()
             else:
                 print(f"{Colors.RED}Invalid command. Type 'help' to list all commands.{Colors.RESET}")
         except KeyboardInterrupt:
