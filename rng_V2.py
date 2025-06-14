@@ -1,5 +1,4 @@
-import random as rd, time as tm
-import os
+import random as rd, time as tm, os, json, sys
 
 class Styles:
     WHITE = "\033[97m"
@@ -156,7 +155,11 @@ def main():
             i = input(f"{Styles.MAGENTA}>>> {Styles.RESET}").strip().lower()
 
             if i in ["exit", "quit"]:
-                print(Styles.GREEN, "Thank you for playing! Goodbye!", Styles.RESET)
+                if input(f'{Styles.YELLOW}Save progress before exiting? (yes/no) >>> {Styles.RESET}').strip().lower() == 'yes':
+                    sys.stdout.write('\033[3K\r')
+                    sys.stdout.flush()
+                    with open(f"{input('What file name would you like to save as? >>> ')}.json", 'w') as f:
+                        json.dump(game, f)
                 return
             elif i in ["roll", "r"]:
                 prompt_roll()
