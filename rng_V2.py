@@ -156,7 +156,8 @@ def main():
 
             if i in ["exit", "quit"]:
                 if input(f'{Styles.YELLOW}Save progress before exiting? (yes/no) >>> {Styles.RESET}').strip().lower() == 'yes':
-                    sys.stdout.write('\033[3K\r')
+                    # Move cursor up one line, clear the line, then move back down
+                    sys.stdout.write('\033[F\033[K')
                     sys.stdout.flush()
                     with open(f"{input('What file name would you like to save as? >>> ')}.json", 'w') as f:
                         json.dump(game, f)
