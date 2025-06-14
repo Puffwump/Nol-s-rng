@@ -21,15 +21,15 @@ print(f"{Styles.YELLOW}Type 'help' for available commands.{Styles.RESET}\n")
 game = {
     "speed": 1,
     "coins": 0,
-    "rarities": {
-        "common": {"count": 0, "reward": 1, "chance": 300},
-        "uncommon": {"count": 0, "reward": 3, "chance": 400},
-        "rare": {"count": 0, "reward": 10, "chance": 470},
-        "epic": {"count": 0, "reward": 20, "chance": 490},
-        "legendary": {"count": 0, "reward": 50, "chance": 497},
-        "mythic": {"count": 0, "reward": 100, "chance": 499},
-        "exotic": {"count": 0, "reward": 500, "chance": 500},
-    },
+    "rarities": [
+        {"name": "common", "count": 0, "reward": 1, "chance": 300},
+        {"name": "uncommon", "count": 0, "reward": 3, "chance": 400},
+        {"name": "rare", "count": 0, "reward": 10, "chance": 470},
+        {"name": "epic", "count": 0, "reward": 20, "chance": 490},
+        {"name": "legendary", "count": 0, "reward": 50, "chance": 497},
+        {"name": "mythic", "count": 0, "reward": 100, "chance": 499},
+        {"name": "exotic", "count": 0, "reward": 500, "chance": 500},
+    ],
     "coin_multiplier": 1,
     "rolled_coins": 0,
     "exotic_unlocked": False,
@@ -61,22 +61,26 @@ def prompt_roll():
 
         roll = rd.randint(1, game["max_roll_rarity"])
         for r in game["rarities"]:
-            if roll <= game["rarities"][r]["chance"]:
-                rarity = game["rarities"][r]
-                name = r
+            if roll <= r["chance"]:
+                if r["name"] == "exotic" and not game["exotic_unlocked"]:
+                    game["exotic_unlocked"] = True
+                    print(f"{Styles.PURPLE}Exotic rarity unlocked!{Styles.RESET}") 
+                    break
+                rarity = r
                 break
 
-        if roll == game["rarities"]["exotic"]["chance"] and not game["exotic_unlocked"]:
-            game["exotic_unlocked"] = True
-
-        print(f"You rolled {name} rarity!", " "*100, end="\r")
+        print(f"You rolled {rarity['name']} rarity!", " "*100, end="\r")
 
         tm.sleep(0.5 * game["speed"])
 
         game["rolled_coins"] += rarity["reward"] * game["coin_multiplier"]
         rarity["count"] += 1
-
-    print(f"{Styles.GREEN}You earned {game['rolled_coins']} coins x {game['coin_multiplier']}x coin multiplier!{Styles.RESET}", " "*100, end = '\n')
+    
+    if game["coin_multiplier"] > 1:
+        p = f" x {game['coin_multiplier']}x coin multiplier!{Styles.RESET}"
+    else:
+        p = None
+    print(f"{Styles.GREEN}You earned {game['rolled_coins']} coins{p if p else ''}", " "*100, end = '\n')
     game["coins"] += game["rolled_coins"]
     game["rolled_coins"] = 0
     print(f"{Styles.YELLOW}Total Coins: {game['coins']}{Styles.RESET}")
@@ -96,6 +100,8 @@ def shop():
               f"  1. Faster Rolls (speed) - 50 coins: Decrease roll animation time\n"
               f"  2. Coin Multiplier (mult) - 100 coins: Double coins per roll\n"
               f"  3. Increase Max Rolls (max) - 200 coins: Increase max rolls per session by 5\n"
+              f"  4. Unlock Exotic Rarity (exotic) - 300 coins: Unlock the exotic rarity for rolls\n"
+              f"  5. Increase Luck (luck) - 400 coins: Increase the chances of rolling higher rarities\n"
               f"  Type the product name to buy it!{Styles.RESET}\n")
         elif i in ["speed", "faster", "rollspeed"]:
             if game["coins"] >= 50:
@@ -136,7 +142,7 @@ def shop():
             if game["coins"] >= 400:
                 game["coins"] -= 400
                 for r in game["rarities"]:
-                    game["rarities"][r]["chance"] += 5
+                    r["chance"] += 5
                 print(f"\n{Styles.GREEN}Luck increased! All rarity chances increased by 5%.{Styles.RESET}\n")
                 game["max_roll_rarity"] = game["rarities"][-1]["chance"]
             else:
@@ -181,11 +187,11 @@ def main():
                 shop()
             elif i == 'cheat' and os.path.exists('cheat.txt'):
                 print("cheat mode activated")
-                game["coin_multiplier"] = int(input("Enter coin multiplier: "))
-                game["coins"] = int(input("Enter coin amount: "))
-                game["exotic_unlocked"] = bool(input("Enter exotic unlocked (True/False): "))
-                game["max_rolls"] = int(input("Enter max rolls: "))
-                game["speed"] = float(input("Enter speed: "))
+                game["coin_multiplier"] = int(input("Enter coin multiplier: ") or game["coin_multiplier"])
+                game["coins"] = int(input("Enter coin amount: ") or game["coins"])
+                game["exotic_unlocked"] = bool(input("Enter exotic unlocked (True/False): ") or game["exotic_unlocked"])
+                game["max_rolls"] = int(input("Enter max rolls: ") or game["max_rolls"])
+                game["speed"] = float(input("Enter speed: ") or game["speed"])
             else:
                 print(f"{Styles.RED}Invalid command. Type 'help' to list all commands.{Styles.RESET}")
         except KeyboardInterrupt:
