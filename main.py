@@ -2,6 +2,7 @@
 import random
 import time
 global totalRolls
+sped_upgrade = 0
 speed = 0.5
 totalRolls = 0
 rolled_coins = 0
@@ -37,7 +38,7 @@ while True:
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
-        print("rolling...", " "*100, end="\r")
+        print("rolling..." "",*100, end="\r")
         time.sleep(speed)
         if exotic_unlocked == True:
             if exotic_printed == False:
@@ -142,15 +143,26 @@ while True:
     if s == "yes":
         u = input("would you like to upgrade your rolling speed, luck, or unlock new rarities? (type speed, luck or rarities)")
         if u == "speed":
-            confirm = input("upgrading rolling speed from 0.5 seconds -> 0.45 seconds for 40 coins?")
-            if confirm == "yes":
-                if coins >= 40:
-                    coins -= 40
-                    speed = 0.45
-                else:
-                    print("ERROR. not enough coins for upgrade. sending you to rolling...")
+            if sped_upgrade == 1:
+                confirm = input("upgrading rolling speed from 0.45 seconds -> 0.4 seconds for 80 coins?")
+                if confirm == "yes":
+                    if coins >= 80:
+                        coins -= 80
+                        speed = 0.4
+                        sped_upgrade += 1
+                    else:
+                        print("ERROR. not enough coins for upgrade. sending you to rolling...")
             else:
-                print("sending you to rolling...")
+                confirm = input("upgrading rolling speed from 0.5 seconds -> 0.45 seconds for 40 coins?")
+                if confirm == "yes":
+                    if coins >= 40:
+                        coins -= 40
+                        speed = 0.45
+                        sped_upgrade += 1
+                    else:
+                        print("ERROR. not enough coins for upgrade. sending you to rolling...")
+                else:
+                    print("sending you to rolling...")
         if u == "luck":
             confirm = input("upgrading reroll chance by 0 -> less than 110 for 100 coins")
             if confirm == "yes":
