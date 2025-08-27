@@ -3,6 +3,7 @@ import random
 import time
 global totalRolls
 sped_upgrade = 0
+reroll_upgrade = 0
 speed = 0.5
 totalRolls = 0
 rolled_coins = 0
@@ -38,7 +39,7 @@ while True:
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
-        print("rolling..." "",*100, end="\r")
+        print("rolling...", end="\r")
         time.sleep(speed)
         if exotic_unlocked == True:
             if exotic_printed == False:
@@ -143,6 +144,15 @@ while True:
     if s == "yes":
         u = input("would you like to upgrade your rolling speed, luck, or unlock new rarities? (type speed, luck or rarities)")
         if u == "speed":
+            if sped_upgrade == 2:
+                confirm = input("upgrading rolling speed from 0.4 seconds -> 0.35 seconds for 100 coins?")
+                if confirm == "yes":
+                    if coins >= 100:
+                        coins -= 100
+                        speed = 0.35
+                        sped_upgrade += 1
+                    else:
+                        print("ERROR. not enough coins for upgrade. sending you to rolling...")
             if sped_upgrade == 1:
                 confirm = input("upgrading rolling speed from 0.45 seconds -> 0.4 seconds for 80 coins?")
                 if confirm == "yes":
@@ -164,11 +174,20 @@ while True:
                 else:
                     print("sending you to rolling...")
         if u == "luck":
+            if reroll_upgrade == 1:
+                confirm = input("upgrading reroll chance from less than 110 -> less than 120 for 200 coins")
+                if confirm == "yes":
+                    if coins >= 200:
+                        coins -= 200
+                        reroll = 120
+                    else:
+                        print("ERROR, not enough coins for upgrade, sending you to rolling...")
             confirm = input("upgrading reroll chance by 0 -> less than 110 for 100 coins")
             if confirm == "yes":
                 if coins >= 100:
                     coins -= 100
                     reroll = 110
+                    reroll_upgrade += 1
                 else:
                     print("ERROR, not enough coins for upgrade, sending you to rolling...")
             else:
@@ -176,7 +195,7 @@ while True:
             if u == "rarity":
                 confirm = input("would you like to unlock a NEW RARITY?!?! ")
                 if confirm == "yes":
-                    confirm2 = input("unlocking ExOtIc for 200 coins ")
+                    confirm2 = input("unlocking Exotic for 200 coins ")
                     if confirm2 == "yes":
                         if coins >= 200:
                             coins -= 200
