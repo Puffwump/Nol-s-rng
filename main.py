@@ -11,7 +11,9 @@ coins = 0
 reroll = 0
 common_coins = 0
 exotic_unlocked = False
+prismatic_unlocked = False
 exotic_printed = False
+prismatic_printed = False
 print("welcome to rng")
 while True:
     if totalRolls >= 100:
@@ -36,6 +38,58 @@ while True:
     epic = 0
     legendary = 0
     mythic = 0
+    if prismatic_unlocked == True:
+        prismatic = 0
+        for i in range (int(n)):
+            print("rolling...", end="\r")
+        time.sleep(speed)
+        if prismatic_unlocked == True:
+            if prismatic_printed == False:
+                print("prismatic rarity is a 1/300 chance, and gives you 500 coins!")
+                exotic_printed = True
+            roll = (random.randint(1, 300))
+            if roll < 200:
+                rarity = "common"
+                rolled_coins += 1
+                common += 1
+            if roll >= 200 and roll <= 291:
+                rarity = "uncommon"
+                uncommon += 1
+                rolled_coins += 3
+            if roll >= 291 and roll <= 321:
+                rarity = "rare"
+                rare += 1
+                rolled_coins += 10
+            if roll >= 321 and roll <= 351:
+                rarity = "epic"
+                epic += 1
+                rolled_coins += 20
+            if roll >= 351 and roll <= 396:
+                rarity = "legendary"
+                legendary += 1
+                rolled_coins += 50
+            if roll >= 396 and roll <=397:
+                rarity = "mythic"
+                mythic += 1
+                rolled_coins += 100
+            if roll >= 397 and roll != 400:
+                rarity = "exotic"
+                exotic += 1
+                rolled_coins += 500
+            if roll == 400:
+                rarity = "prismatic"
+                prismatic += 1
+                rolled_coins += 1000
+                print("THAT'S INSANE!!!! you rolled PRISMATIC rarity!!!!!!!", end="\r")
+            print("you rolled ", rarity , "!")
+            if rarity == "epic":
+                print("wow! you got epic!", end="\r")
+            if rarity == "legendary":
+                print("WoOoOw!!!!! YOU GOT LEGENDARY!!!!!!!!!", end="\r")
+            if rarity == "mythic":
+                print("AMAZING!!!!!!!! YOU GOT MYTHIC!!!!!!!!!!", end="\r")
+            if rarity == "exotic":
+                print("FANTASTIC!!!! you rolled ExOtIc rarity!!!!!!!", end="\r")
     if exotic_unlocked == True:
         exotic = 0
     for i in range (int(n)):
@@ -193,14 +247,24 @@ while True:
             else:
                 print("sending you to rolling")
             if u == "rarity":
+                if exotic_unlocked:
+                    confirm = input("would you like to unlock another NEW RARITY?!?!")
+                    if confirm == "yes":
+                        confirm2 = input("unlocking prismatic for 500 coins")
+                        if confirm2 == "yes":
+                            if coins >= 500:
+                                coins -= 500
+                                prismatic_unlocked = True
+                            else:
+                                print("ERROR, not enough coins for upgrade, sending you to rolling...")
                 confirm = input("would you like to unlock a NEW RARITY?!?! ")
                 if confirm == "yes":
                     confirm2 = input("unlocking Exotic for 200 coins ")
                     if confirm2 == "yes":
                         if coins >= 200:
                             coins -= 200
-                            print("you have unlocked ExOtIc rarity!")
-                            print("ExOtIc rarity is a 1/300 chance, and gives you 500 coins!")
+                            print("you have unlocked Exotic rarity!")
+                            print("Exotic rarity is a 1/300 chance, and gives you 500 coins!")
                             exotic_unlocked = True
                         else:
                             print("ERROR, not enough coins for upgrade, sending you to rolling...")
